@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
+import { LoginForm } from "@/components/loginForm";
 
 export default async function Home() {
   
   return (
     <div>
-      aoooooo
+      <LoginForm />
     </div>
   );
 }

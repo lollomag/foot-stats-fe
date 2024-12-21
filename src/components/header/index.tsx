@@ -1,29 +1,38 @@
 "use client"
 import { Menu, LogOut, Wallet, CircleUserRound } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "../ui/sheet";
 import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "../ui/dropdown-menu";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function Header() {
+  const { user } = useUser();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isLogged, setIsLogged] = useState<boolean>(true);
+  const [isLogged, setIsLogged] = useState<boolean>(false);
   const isLoginPage = pathname === "/login";
 
+  useEffect(() => {
+    console.log(user);
+    if (!!user) {
+      setIsLogged(true)
+    }
+  }, [user])
+  
   const navigation = [
-    { name: "Le mie statistiche", href: "#" },
-    { name: "Giocatori", href: "#" },
-    { name: "Confronta giocatori", href: "#" }
+    { name: "Le mie statistiche", href: "statistiche-personali" },
+    { name: "Giocatori", href: "giocatori" },
+    { name: "Confronta giocatori", href: "confronta-giocatori" }
   ];
 
   return (
-    <header className="max-w-screen-2xl mx-auto px-4 py-6 lg:px-8">
-      <nav className="flex items-center justify-between">
-        <Link href="/">
+    <header className="sticky top-0 bg-green-800 text-white">
+      <nav className="max-w-screen-2xl mx-auto px-4 py-4 lg:px-8 border-b-2 border-black flex items-center justify-between">
+        <Link href={"/"}>
           <span className="sr-only">FootStats</span>
           <p className="text-3xl font-extrabold">FootStats</p>
         </Link>
@@ -48,26 +57,28 @@ export default function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src={user?.picture || ""} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="mt-2">
-                <DropdownMenuItem><CircleUserRound /> Profilo</DropdownMenuItem>
-                <DropdownMenuItem><Wallet /> Pagamenti</DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link href={"/profilo"} className="w-100"><CircleUserRound /> Profilo</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer"><Wallet /> Pagamenti</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem><LogOut /> Esci</DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <a href="/api/auth/logout" className="w-100">
+                    <LogOut /> Esci
+                  </a>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         )}
 
         {!isLogged && !isLoginPage && (
-          <div className="">
-            <Button asChild>
-              <Link href={"/login"}>Accedi</Link>
-            </Button>
-          </div>
+          <a href="/api/auth/login?returnTo=/statistiche-personali">Accedi</a>
         )}
       </nav>
 

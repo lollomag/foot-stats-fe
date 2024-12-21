@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
+import { UserProvider } from '@auth0/nextjs-auth0/client';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,14 +27,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Header />
-        <main className="container max-w-screen-2xl mx-auto px-4 py-6 lg:px-8">
-          {children}
-        </main>
-      </body>
+      <UserProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <Header />
+          <main className="container max-w-screen-2xl mx-auto px-4 py-6 lg:px-8 min-h-[calc(100svh-150px)]">
+            {children}
+          </main>
+        </body>
+      </UserProvider>
     </html>
   );
 }

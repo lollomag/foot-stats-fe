@@ -1,22 +1,23 @@
 "use client"
-import { Menu, X } from "lucide-react";
+import { Menu, LogOut, Wallet, CircleUserRound } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "../ui/sheet";
 import { usePathname } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "../ui/dropdown-menu";
 
 export default function Header() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isLogged, setIsLogged] = useState<boolean>(false);
+  const [isLogged, setIsLogged] = useState<boolean>(true);
   const isLoginPage = pathname === "/login";
 
   const navigation = [
-    { name: "Features", href: "#" },
-    { name: "Resources", href: "#" },
-    { name: "Docs", href: "#" },
-    { name: "Pricing", href: "#" },
+    { name: "Le mie statistiche", href: "#" },
+    { name: "Giocatori", href: "#" },
+    { name: "Confronta giocatori", href: "#" }
   ];
 
   return (
@@ -34,16 +35,30 @@ export default function Header() {
         )}
 
         {isLogged && (
-          <div className="hidden md:flex md:gap-x-12">
+          <div className="hidden md:flex md:gap-x-12 items-center">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-sm font-medium text-foreground transition-all hover:text-foreground/80"
+                className="text-md font-semibold transition-all hover:underline"
               >
                 {item.name}
               </Link>
             ))}
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="mt-2">
+                <DropdownMenuItem><CircleUserRound /> Profilo</DropdownMenuItem>
+                <DropdownMenuItem><Wallet /> Pagamenti</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem><LogOut /> Esci</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         )}
 

@@ -1,6 +1,7 @@
-"use client"
-import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-
-export default withPageAuthRequired(function Players() {
-  return <div>Players</div>;
-});
+export default async function Players() {
+  return (
+    <div>
+      giocatori
+    </div>
+  );
+}

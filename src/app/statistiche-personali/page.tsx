@@ -1,11 +1,23 @@
-"use client"
 import { BarCharts } from '@/components/BarCharts';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+import { cookies } from 'next/headers';
 
-export default withPageAuthRequired(function MyStats() {
+const MyStats: React.FC = async () => {
+  const jwt = (await cookies()).get('jwt')?.value;
+
+  if (!jwt) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <p className="text-red-500">Non sei autenticato. Effettua il login.</p>
+        <a href="/login" className="text-blue-500 underline">
+          Vai al Login
+        </a>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex justify-between items-center mb-6">
@@ -85,4 +97,6 @@ export default withPageAuthRequired(function MyStats() {
       </Tabs>
     </>
   );
-});
+};
+
+export default MyStats;

@@ -18,7 +18,7 @@ const HeroHome = () => {
             where you are.
           </p>
           <Button className="flex items-center space-x-2">
-            <span>Come funziona</span>
+            <span>Come funziona test</span>
           </Button>
         </div>
 

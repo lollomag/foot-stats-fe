@@ -1,5 +1,3 @@
-
-import { ChevronDown } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 

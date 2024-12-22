@@ -1,12 +1,11 @@
 "use client"
 import { BarCharts } from '@/components/BarCharts';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 
-export default withPageAuthRequired(function MyStats({ user }) {
+export default withPageAuthRequired(function MyStats() {
   return (
     <>
       <div className="flex justify-between items-center mb-6">

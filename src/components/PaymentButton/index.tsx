@@ -1,23 +1,28 @@
 "use client"
-import { loadStripe } from "@stripe/stripe-js";
-import axios from "axios";
 import { Button } from "../ui/button";
+import { useUser } from "@/context/UserContext";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
-const PaymentButton = ({ priceId, label }: {priceId: string, label: string}) => {
-  const handleCheckout = async () => {
-    const stripe = await stripePromise;
-    
+const PaymentButton = ({ priceId, label }: { priceId: string, label: string }) => {
+  const { user } = useUser();
 
-    // Call API to create a checkout session
-    const { data } = await axios.post("/api/checkout-session", { priceId });
+  const handleSubscribe = async () => {
+    const response = await fetch('/api/checkout/session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        priceId,
+        userId: user.id,
+      }),
+    });
 
-    // Redirect to Stripe Checkout
-    await stripe?.redirectToCheckout({ sessionId: data.sessionId });
+    const { url } = await response.json();
+    window.location.href = url; // Reindirizza a Stripe Checkout
   };
 
-  return <Button onClick={handleCheckout}>{label}</Button>;
+  return <Button onClick={handleSubscribe}>{label}</Button>;
 };
 
 export default PaymentButton;

@@ -11,7 +11,7 @@ const MyStats: React.FC = async () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <p className="text-red-500">Non sei autenticato. Effettua il login.</p>
-        <a href="/login" className="text-blue-500 underline">
+        <a href="/accedi" className="text-blue-500 underline">
           Vai al Login
         </a>
       </div>

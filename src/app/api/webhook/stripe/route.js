@@ -10,20 +10,15 @@ export const config = {
 
 
 export async function POST(req) {
-    console.log('Stripe Signature:', req.headers['stripe-signature']);
     const sig = req.headers.get('stripe-signature'); // Ottieni l'intestazione `stripe-signature`
     if (!sig) {
-        console.error('Errore: Intestazione stripe-signature mancante.');
         return new Response(
             JSON.stringify({ error: 'Missing stripe-signature header.' }),
             { status: 400, headers: { 'Content-Type': 'application/json' } }
         );
     }
 
-    console.log('Intestazione stripe-signature ricevuta:', sig);
-
     const buf = await req.text(); // Leggi il corpo della richiesta come buffer
-    console.log('Buffer del corpo della richiesta:', buf);
 
     try {
         // Verifica l'autenticità del webhook
@@ -40,7 +35,7 @@ export async function POST(req) {
                 const userId = session.metadata.userId;
     
                 // Chiamata all'API di Strapi per aggiornare l'utente
-                const res = await fetch(`${process.env.STRAPI_API_URL}/users/${userId}`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/users/${userId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

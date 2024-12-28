@@ -1,5 +1,4 @@
 "use client"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -51,7 +50,7 @@ export default function SignupForm({ setModalOpen }: SignupFormInterface) {
   const { refreshUser } = useUser();
   const router = useRouter();
 
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -65,7 +64,6 @@ export default function SignupForm({ setModalOpen }: SignupFormInterface) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
       const objToSend = {
         // name: values.name,
         // surname: values.surname,
@@ -76,12 +74,12 @@ export default function SignupForm({ setModalOpen }: SignupFormInterface) {
       try {
         const response = await registerUser(objToSend);
         Cookies.set('jwt', response.jwt, { expires: 7 });
-        setError(null);
+        // setError(null);
         await refreshUser();
         setModalOpen(false);
         router.push('/statistiche-personali');
       } catch (err) {
-        setError('Username o password errati');
+        // setError('Username o password errati');
         console.log(err);
       }
     } catch (error) {

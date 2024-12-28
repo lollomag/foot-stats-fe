@@ -1,7 +1,7 @@
 export default async function PaymentConfirm() {
   return (
     <div>
-      Pagamento ocnfermato
+      Pagamento Confermato
     </div>
   );
 }

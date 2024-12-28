@@ -10,7 +10,7 @@ export const config = {
 
 
 export async function POST(req) {
-	const sig = req.headers.get('stripe-signature'); // Ottieni l'intestazione `stripe-signature`
+	const sig = req.headers.get('stripe-signature');
 	if (!sig) {
 		return new Response(
 			JSON.stringify({ error: 'Missing stripe-signature header.' }),
@@ -24,18 +24,11 @@ export async function POST(req) {
 		// Verifica l'autenticità del webhook
 		const event = stripe.webhooks.constructEvent(buf, sig, process.env.STRIPE_WEBHOOK_SECRET);
 
-		// Gestisci il tipo di evento
 		if (event.type === 'checkout.session.completed') {
 			const session = event.data.object;
-			console.log('Evento session.completed ricevuto:', session);
 
-			// Inserisci qui la tua logica per aggiornare Strapi
 			try {
-				// Recupera i dati dal webhook
 				const userId = session.metadata.userId;
-
-				console.log("in quella finale", userId);
-				
 
 				// Chiamata all'API di Strapi per aggiornare l'utente
 				const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/users/${userId}`, {
@@ -58,7 +51,6 @@ export async function POST(req) {
 					);
 				}
 
-				console.log('Utente aggiornato in Strapi con successo.');
 				return new Response(JSON.stringify({ success: true }), {
 					status: 200,
 					headers: { 'Content-Type': 'application/json' },

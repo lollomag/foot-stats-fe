@@ -4,11 +4,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(req) {
 	try {
-		const body = await req.json(); // Leggi il corpo della richiesta
+		const body = await req.json();
 		const { priceId, userId } = body;
-
-		console.log("arriva userId", userId);
-		
 
 		// Crea una sessione di pagamento Stripe
 		const session = await stripe.checkout.sessions.create({

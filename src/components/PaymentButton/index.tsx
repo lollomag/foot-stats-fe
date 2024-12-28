@@ -2,11 +2,8 @@
 import { Button } from "../ui/button";
 import { useUser } from "@/context/UserContext";
 
-
 const PaymentButton = ({ priceId, label }: { priceId: string, label: string }) => {
   const { user } = useUser();
-  console.log(user);
-  
 
   const handleSubscribe = async () => {
     const response = await fetch('/api/checkout/session', {

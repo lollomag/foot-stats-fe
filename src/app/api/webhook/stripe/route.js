@@ -18,8 +18,11 @@ async function buffer(readable) {
 
 export async function POST(req) {
     console.log('Richiesta ricevuta al webhook Stripe');
+		console.log('Intestazioni ricevute:', req.headers);
+    console.log('Corpo della richiesta:', await req.text());
 
     const sig = req.headers['stripe-signature']; // Ottieni la firma
+		console.log('Stripe Signature:', sig); 
     if (!sig) {
         console.error('Errore: Intestazione stripe-signature mancante.');
         return new Response(

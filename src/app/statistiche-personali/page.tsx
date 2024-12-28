@@ -1,4 +1,5 @@
 import { BarCharts } from '@/components/BarCharts';
+import { PageNotFound } from '@/components/PageNotFound';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -7,16 +8,7 @@ import { cookies } from 'next/headers';
 const MyStats: React.FC = async () => {
   const jwt = (await cookies()).get('jwt')?.value;
 
-  if (!jwt) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <p className="text-red-500">Non sei autenticato. Effettua il login.</p>
-        <a href="/accedi" className="text-blue-500 underline">
-          Vai al Login
-        </a>
-      </div>
-    );
-  }
+  if (!jwt) return <PageNotFound />
 
   return (
     <>

@@ -38,7 +38,7 @@ export async function POST(req) {
 				
 
 				// Chiamata all'API di Strapi per aggiornare l'utente
-				const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/users/1`, {
+				const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/users/${userId}`, {
 					method: 'PUT',
 					headers: {
 						'Content-Type': 'application/json',

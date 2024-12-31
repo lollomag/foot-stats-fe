@@ -24,12 +24,12 @@ import { useRouter } from "next/navigation"
 // Define validation schema using Zod
 const formSchema = z
   .object({
-    // name: z
-    //   .string()
-    //   .min(2, { message: 'Il nome deve contenere almeno due lettere' }),
-    // surname: z
-    //   .string()
-    //   .min(2, { message: 'Il cognome deve contenere almeno due lettere' }),
+    name: z
+      .string()
+      .min(2, { message: 'Il nome deve contenere almeno due lettere' }),
+    surname: z
+      .string()
+      .min(2, { message: 'Il cognome deve contenere almeno due lettere' }),
     email: z.string().email({ message: 'Invalid email address' }),
     password: z
       .string()
@@ -54,8 +54,8 @@ export default function SignupForm({ setModalOpen }: SignupFormInterface) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      // name: '',
-      // surname: '',
+      name: '',
+      surname: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -65,8 +65,8 @@ export default function SignupForm({ setModalOpen }: SignupFormInterface) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const objToSend = {
-        // name: values.name,
-        // surname: values.surname,
+        name: values.name,
+        surname: values.surname,
         username: values.email,
         email: values.email,
         password: values.password
@@ -93,7 +93,7 @@ export default function SignupForm({ setModalOpen }: SignupFormInterface) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mb-0">
           <div className="grid gap-4">
             {/* Name Field */}
-            {/* <FormField
+            <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
@@ -105,8 +105,8 @@ export default function SignupForm({ setModalOpen }: SignupFormInterface) {
                   <FormMessage />
                 </FormItem>
               )}
-            /> */}
-{/* 
+            />
+
             <FormField
               control={form.control}
               name="surname"
@@ -119,7 +119,7 @@ export default function SignupForm({ setModalOpen }: SignupFormInterface) {
                   <FormMessage />
                 </FormItem>
               )}
-            /> */}
+            />
 
             {/* Email Field */}
             <FormField

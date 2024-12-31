@@ -17,8 +17,8 @@ export async function POST(req) {
 					quantity: 1,
 				},
 			],
-			success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/conferma-pagamento?session_id={CHECKOUT_SESSION_ID}`,
-			cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/pagamento-rifiutato`,
+			success_url: `${process.env.NEXT_PUBLIC_SITE_URL}?status=OK`,
+			cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}?status=KO`,
 			metadata: { userId },
 		});
 

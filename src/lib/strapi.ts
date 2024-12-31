@@ -27,3 +27,19 @@ export const getUserData = async (jwt: string) => {
   });
   return response.data;
 };
+
+// Ottieni i dati dell'utente autenticato
+export const changeUserPassword = async (jwt: string, body: {
+  currentPassword: string,
+  password: string,
+  passwordConfirmation: string
+}) => {
+  const response = await axios.post(`${API_URL}/api/auth/change-password`,
+  body,
+  {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+  return response.data;
+};

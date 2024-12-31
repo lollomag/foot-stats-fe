@@ -42,7 +42,6 @@ export default function LoginForm({ setModalOpen }: LoginFormInterface) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
       const objToSend = {
         identifier: values.email,
         password: values.password

@@ -1,20 +1,31 @@
 "use client"
 import HeroHome from "@/components/HeroHome";
-import PaymentButton from "@/components/PaymentButton";
-import { useUser } from "@/context/UserContext";
+import { PaymentStatusModal } from "@/components/PaymentStatusModal";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 
-export default function Home() {
-  const { user } = useUser();
+function PageContent() {
+  const searchParams = useSearchParams();
+  const status = searchParams.get('status');
+
+  const [showPaymentModal, setShowPaymentModal] = useState(!!status);
 
   return (
-    <div>
+    <>
       <HeroHome />
-      {user && !user.subscriptionActive && (
-        <div className="flex gap-5">
-          <PaymentButton priceId={"price_1QYnaSITuH8atYtFZKAZAdFU"} label="Abbonamento mensile" />
-          <PaymentButton priceId={"price_1QYna9ITuH8atYtFWJIJKfH8"} label="Abbonamento annuale" />
-        </div>
-      )}
-    </div>
+      <PaymentStatusModal
+        open={showPaymentModal}
+        setOpen={setShowPaymentModal}
+        status={status}
+      />
+    </>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PageContent />
+    </Suspense>
   );
 }

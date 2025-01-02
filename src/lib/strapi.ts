@@ -60,3 +60,11 @@ export const getStripeData = async (customerId: string) => {
   const response = await axios.get(`${process.env.NEXT_PUBLIC_SITE_URL}/api/subscription?customerId=${customerId}`);
   return response.data;
 };
+
+export const postChangeRenew = async (subscriptionId: string, enableRenewal: boolean) => {
+  const response = await axios.post(`${process.env.NEXT_PUBLIC_SITE_URL}/api/subscription/cancel-renewal`, {
+    subscriptionId,
+    enableRenewal
+  });
+  return response.data;
+};

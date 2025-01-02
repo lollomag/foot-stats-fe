@@ -55,3 +55,8 @@ export const resetPassword = async (body: {
   const response = await axios.post(`${API_URL}/api/auth/reset-password`, body,);
   return response.data;
 };
+
+export const getStripeData = async (customerId: string) => {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_SITE_URL}/api/subscription?customerId=${customerId}`);
+  return response.data;
+};

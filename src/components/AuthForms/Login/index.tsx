@@ -20,18 +20,14 @@ import { loginUser } from "@/lib/strapi"
 import Cookies from 'js-cookie';
 import { useUser } from "@/context/UserContext"
 import { useRouter } from "next/navigation"
-
+import Link from "next/link"
 
 const formSchema = z.object({
   email: z.string(),
   password: z.string()
 });
 
-interface LoginFormInterface {
-  setModalOpen: (value: boolean) => void
-}
-
-export default function LoginForm({ setModalOpen }: LoginFormInterface) {
+export default function LoginForm() {
   const { refreshUser } = useUser();
   const router = useRouter();
 
@@ -51,7 +47,6 @@ export default function LoginForm({ setModalOpen }: LoginFormInterface) {
         Cookies.set('jwt', response.jwt, { expires: 7 });
         setError(null);
         await refreshUser();
-        setModalOpen(false);
         router.push('/statistiche-personali');
       } catch (err) {
         setError('Username o password errati');
@@ -97,9 +92,9 @@ export default function LoginForm({ setModalOpen }: LoginFormInterface) {
                 <FormMessage />
               </FormItem>
             )} />
-
-          <Button type="submit" className="w-full font-semibold">Accedi</Button>
           {error && <p className="text-red-600 text-center text-md font-semibold">{error}</p>}
+          <Button type="submit" className="w-full font-semibold bg-green-800">Accedi</Button>
+          <p className="text-sm text-center">Password dimenticata ? <Link href={"/password-dimenticata"} className="underline hover:no-underline">Recupera password</Link></p>
         </form>
       </Form>
     </>

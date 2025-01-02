@@ -42,11 +42,8 @@ const formSchema = z
     message: 'Le password non coincidono',
   })
 
-interface SignupFormInterface {
-  setModalOpen: (value: boolean) => void
-}
 
-export default function SignupForm({ setModalOpen }: SignupFormInterface) {
+export default function SignupForm() {
   const { refreshUser } = useUser();
   const router = useRouter();
 
@@ -76,7 +73,6 @@ export default function SignupForm({ setModalOpen }: SignupFormInterface) {
         Cookies.set('jwt', response.jwt, { expires: 7 });
         // setError(null);
         await refreshUser();
-        setModalOpen(false);
         router.push('/statistiche-personali');
       } catch (err) {
         // setError('Username o password errati');

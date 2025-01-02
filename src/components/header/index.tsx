@@ -7,9 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuItem } from "../ui/dropdown-menu";
 import { logoutUser } from "@/lib/auth";
-import { Button } from "../ui/button";
 import { useUser } from "@/context/UserContext";
-import { AuthModal } from "../AuthModal";
 
 export default function Header() {
   const { isAuthenticated, refreshUser } = useUser();
@@ -17,7 +15,6 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [openAuthModal, setOpenAuthModal] = useState<boolean>(false);
   const isLoginPage = pathname === "/login";
 
   const handleLogout = async () => {
@@ -80,7 +77,7 @@ export default function Header() {
           )}
 
           {!isAuthenticated && !isLoginPage && (
-            <Button onClick={() => setOpenAuthModal(true)}>Accedi</Button>
+            <Link href={"/accedi"}>Accedi</Link>
           )}
         </nav>
 
@@ -101,7 +98,6 @@ export default function Header() {
           </SheetContent>
         </Sheet>
       </header>
-      <AuthModal open={openAuthModal} setOpen={setOpenAuthModal} />
     </>
   )
 }

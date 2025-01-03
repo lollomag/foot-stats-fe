@@ -4,15 +4,19 @@ import Stripe from "stripe";
 import { Button } from "../ui/button";
 import ConfirmActionModal from "../Modals/ConfirmActionModal";
 import { useState } from "react";
-import { postChangeRenew } from "@/lib/strapi";
+import { postChangeRenew, postChangeSubscriptionType } from "@/lib/strapi";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function PaymentsInfo({ paymentData }: any) {
   const [showAutoRenewModal, setShowAutoRenewModal] = useState<boolean>(false);
+  const [showSubscriptionTypeModal, setShowSubscriptionTypeModal] = useState<boolean>(false);
+
   const [autoRenewStatus, setAutoRenewStatus] = useState<boolean>(paymentData?.subscriptions[0]?.cancel_at_period_end);
+  const [subscriptionType, setSubscriptionType] = useState<string>(paymentData?.subscriptions[0]?.plan.interval);
+  const [subscriptionEnd, setSubscriptionEnd] = useState<number>(paymentData?.subscriptions[0]?.current_period_end);
 
   const getSubscriptionType = () => {
-    switch (paymentData.subscriptions[0].plan.interval) {
+    switch (subscriptionType) {
       case "year":
         return "Annuale"
       case "month":
@@ -44,6 +48,37 @@ export default function PaymentsInfo({ paymentData }: any) {
     }
   }
 
+  const changeSubscriptionType = async () => {
+    try {
+      const result = await postChangeSubscriptionType(paymentData.subscriptions[0].id, "price_1QYna9ITuH8atYtFWJIJKfH8");
+      setSubscriptionType(result.subscription.plan.interval);
+      setSubscriptionEnd(result.subscription.current_period_end);
+      setShowSubscriptionTypeModal(false);
+    } catch (error) {
+      console.error("error:", error);
+    }
+  }
+
+  if (!paymentData) {
+    return (
+      <>
+        <h2 className="text-xl font-semibold mb-4">Riepilogo Abbonamento</h2>
+        <div className="space-y-4">
+          <div className="border p-4 rounded">
+            <p className="text-sm font-medium">Stato:</p>
+            <p className="text-lg font-semibold">ATTIVO</p>
+          </div>
+          <div className="border p-4 rounded flex justify-between items-center">
+            <div>
+              <p className="text-sm font-medium">Tipo di Abbonamento:</p>
+              <p className="text-lg font-semibold">Gratuito</p>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
   return (
     <>
       <h2 className="text-xl font-semibold mb-4">Riepilogo Abbonamento</h2>
@@ -52,9 +87,14 @@ export default function PaymentsInfo({ paymentData }: any) {
           <p className="text-sm font-medium">Stato:</p>
           <p className="text-lg font-semibold">{getStatusLabel()}</p>
         </div>
-        <div className="border p-4 rounded">
-          <p className="text-sm font-medium">Tipo di Abbonamento:</p>
-          <p className="text-lg font-semibold">{getSubscriptionType()}</p>
+        <div className="border p-4 rounded flex justify-between items-center">
+          <div>
+            <p className="text-sm font-medium">Tipo di Abbonamento:</p>
+            <p className="text-lg font-semibold">{getSubscriptionType()}</p>
+          </div>
+          {getSubscriptionType() === "Mensile" && (
+            <Button className="font-semibold" onClick={() => setShowSubscriptionTypeModal(true)}>Passa a Piano Annuale</Button>
+          )}
         </div>
         <div className="border p-4 rounded flex justify-between items-center">
           <div>
@@ -65,12 +105,12 @@ export default function PaymentsInfo({ paymentData }: any) {
         </div>
         <div className="border p-4 rounded">
           <p className="text-sm font-medium">Prossimo Pagamento:</p>
-          <p className="text-lg font-semibold">{getFormatDate(paymentData.subscriptions[0].current_period_end)}</p>
+          <p className="text-lg font-semibold">{getFormatDate(subscriptionEnd)}</p>
         </div>
         <div className="border p-4 rounded">
           <p className="text-sm font-medium">Storico Pagamenti:</p>
           <ul className="list-disc pl-6">
-            {paymentData.payments.map((payment: Stripe.PaymentIntent) => (
+            {paymentData?.payments?.map((payment: Stripe.PaymentIntent) => (
               <li key={payment.id}>{getFormatDate(payment.created)} - {payment.amount / 100}€</li>
             ))}
           </ul>
@@ -82,6 +122,13 @@ export default function PaymentsInfo({ paymentData }: any) {
         open={showAutoRenewModal}
         setOpen={setShowAutoRenewModal}
         onConfirm={changeRenew}
+      />
+      <ConfirmActionModal
+        title="Passa al Piano Annuale"
+        description={`Sei sicuro di voler passare al piano annuale ? Confermando, verrà effettuato il pagamento dell'abbonamento annuale, al netto del saldo residuo del mese corrente`}
+        open={showSubscriptionTypeModal}
+        setOpen={setShowSubscriptionTypeModal}
+        onConfirm={changeSubscriptionType}
       />
     </>
   )

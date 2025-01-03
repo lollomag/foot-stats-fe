@@ -20,8 +20,8 @@ export async function middleware(req: NextRequest) {
 			url.pathname = '/';
 			return NextResponse.redirect(url);
 		}
-		
-		if (!user.subscriptionActive) {
+
+		if (!user.subscriptionActive && !user.lifetimeAccess) {
 			url.pathname = '/iscriviti';
 			return NextResponse.redirect(url);
 		}

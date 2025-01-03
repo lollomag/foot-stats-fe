@@ -25,6 +25,7 @@ export default function Profile() {
   };
 
   const fetchData = async () => {
+    if (user.lifetimeAccess) return
     try {
       const result = await getStripeData(user.stripeCustomerId);
       setData(result);

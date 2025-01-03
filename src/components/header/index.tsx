@@ -1,5 +1,5 @@
 "use client"
-import { Menu, LogOut, Wallet, CircleUserRound } from "lucide-react";
+import { Menu, LogOut, CircleUserRound } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "../ui/sheet";
@@ -66,7 +66,6 @@ export default function Header() {
                   <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href={"/profilo"} className="w-100"><CircleUserRound /> Profilo</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer"><Wallet /> Pagamenti</DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
                     <LogOut /> Esci

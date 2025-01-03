@@ -68,3 +68,11 @@ export const postChangeRenew = async (subscriptionId: string, enableRenewal: boo
   });
   return response.data;
 };
+
+export const postChangeSubscriptionType = async (subscriptionId: string, newPriceId: string) => {
+  const response = await axios.post(`${process.env.NEXT_PUBLIC_SITE_URL}/api/subscription/upgrade`, {
+    subscriptionId,
+    newPriceId
+  });
+  return response.data;
+};

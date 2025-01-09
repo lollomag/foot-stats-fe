@@ -1,23 +1,46 @@
+"use client"
 import { BarCharts } from '@/components/BarCharts';
-import { PageNotFound } from '@/components/PageNotFound';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { cookies } from 'next/headers';
+import { useUser } from '@/context/UserContext';
+import { addToFavourites } from '@/lib/strapi';
+import { StarIcon } from 'lucide-react';
+import Cookies from 'js-cookie';
 
-const MyStats: React.FC = async () => {
-  const jwt = (await cookies()).get('jwt')?.value;
 
-  if (!jwt) return <PageNotFound />
+const MyStats: React.FC = () => {
+  const { user, refreshUser } = useUser();
+  const jwt = Cookies.get("jwt");
+
+  const toggleFavorite = async (playerId: number) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const favoriteIds = user.favorites.map((favorite: any) => favorite.id)
+
+    try {
+      await addToFavourites(jwt || "", playerId, user.id, favoriteIds)
+      await refreshUser()
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Le mie statistiche</h1>
-        {/* <div className="flex items-center space-x-4">
-          <Button variant="secondary">Jan 20, 2023 - Feb 09, 2023</Button>
-          <Button variant="default">Download</Button>
-        </div> */}
+        <h1 className="text-2xl font-bold">Preferiti</h1>
+      </div>
+
+      <div className="grid grid-cols-4 xl:grid-cols-5 gap-4 mb-6">
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        {user?.favorites.map((player: any) => (
+          <div key={player.id} className="border-2 border-green-800 rounded-sm py-1 px-2 flex items-start gap-3">
+            <button onClick={() => toggleFavorite(player.id)} className="text-green-800">
+              <StarIcon className={"fill-green-800"} />
+            </button>
+            <p className="font-semibold">{player.fullname}</p>
+          </div>
+        ))}
       </div>
 
       <Tabs defaultValue="overview" className="mb-6">

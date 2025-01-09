@@ -11,13 +11,13 @@ export const registerUser = async (body: {
   return response.data;
 };
 
-export const loginUser = async (body: {identifier: string, password: string}) => {
+export const loginUser = async (body: { identifier: string, password: string }) => {
   const response = await axios.post(`${API_URL}/api/auth/local`, body);
   return response.data;
 };
 
 export const getUserData = async (jwt: string) => {
-  const response = await axios.get(`${API_URL}/api/users/me`, {
+  const response = await axios.get(`${API_URL}/api/users/me?populate=favorites`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
@@ -31,12 +31,12 @@ export const changeUserPassword = async (jwt: string, body: {
   passwordConfirmation: string
 }) => {
   const response = await axios.post(`${API_URL}/api/auth/change-password`,
-  body,
-  {
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-    },
-  });
+    body,
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
   return response.data;
 };
 
@@ -74,5 +74,54 @@ export const postChangeSubscriptionType = async (subscriptionId: string, newPric
     subscriptionId,
     newPriceId
   });
+  return response.data;
+};
+
+//main features
+export const uploadPlayers = async (fullname: string) => {
+  const response = await axios.post(`${API_URL}/api/players`, {
+    data: {
+      fullname
+    }
+  });
+  return response.data;
+};
+
+export const getPlayers = async (jwt: string, page: number, searchQuery: string) => {
+  const searchFilter = searchQuery ? `&filters[fullname][$contains]=${searchQuery}` : "";
+
+  const response = await axios.get(`${API_URL}/api/players?pagination[page]=${page}&pagination[pageSize]=12${searchFilter}&populate=*`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+  return response.data;
+};
+
+export const getSuggestedPlayers = async (jwt: string, surname: string) => {
+  const response = await axios.get(`${API_URL}/api/players?filters[fullname][$contains]=${surname}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+  return response.data;
+};
+
+export const addToFavourites = async (jwt: string, playerId: number, userId: string | number, currentFavorites: number[]) => {
+  const isFavorite = currentFavorites.includes(playerId);
+
+  const updatedFavorites = isFavorite
+    ? currentFavorites.filter((id) => id !== playerId)
+    : [...currentFavorites, playerId];
+
+  const response = await axios.put(`${API_URL}/api/users/${userId}`,
+    {
+      favorites: updatedFavorites
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
   return response.data;
 };

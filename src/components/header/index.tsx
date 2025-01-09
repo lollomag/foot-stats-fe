@@ -24,7 +24,7 @@ export default function Header() {
   };
 
   const navigation = [
-    { name: "Le mie statistiche", href: "statistiche-personali" },
+    { name: "Preferiti", href: "preferiti" },
     { name: "Giocatori", href: "giocatori" },
     { name: "Confronta giocatori", href: "confronta-giocatori" }
   ];

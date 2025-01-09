@@ -31,7 +31,7 @@ export default function UploadPlayers() {
         if (!event.target) return;
         const jsonData = JSON.parse(event.target.result as string) as { data: string[] };
 
-        const apiUrl = "http://localhost:1337/api/players";
+        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/players`;
 
         const headers = {
           "Content-Type": "application/json",

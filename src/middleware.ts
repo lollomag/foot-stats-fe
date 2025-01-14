@@ -26,6 +26,14 @@ export async function middleware(req: NextRequest) {
 			return NextResponse.redirect(url);
 		}
 
+		if (req.nextUrl.pathname.startsWith("/carica-torneo") && user.role.name !== "SuperAdmin") {
+			return NextResponse.redirect(new URL("/non-autorizzato", req.url));
+		}
+
+		if (req.nextUrl.pathname.startsWith("/carica-giocatori") && user.role.name !== "SuperAdmin") {
+			return NextResponse.redirect(new URL("/non-autorizzato", req.url));
+		}
+
 		// L'utente è autenticato e ha un abbonamento attivo: lascia passare
 		return NextResponse.next();
 	} catch (err) {
@@ -40,7 +48,9 @@ export const config = {
 	matcher: [
 		'/giocatori/:path*',
 		'/confronta-giocatori/:path*',
-		'/statistiche-personali/:path*',
-		'/profilo/:path*'
+		'/preferiti/:path*',
+		'/profilo/:path*',
+		'/carica-torneo',
+		'/carica-giocatori'
 	], // Route protette
 };

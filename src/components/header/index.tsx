@@ -1,5 +1,5 @@
 "use client"
-import { Menu, LogOut, CircleUserRound } from "lucide-react";
+import { Menu, LogOut, CircleUserRound, Upload } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "../ui/sheet";
@@ -10,7 +10,7 @@ import { logoutUser } from "@/lib/auth";
 import { useUser } from "@/context/UserContext";
 
 export default function Header() {
-  const { isAuthenticated, refreshUser } = useUser();
+  const { user, isAuthenticated, refreshUser } = useUser();
 
   const pathname = usePathname();
   const router = useRouter();
@@ -66,6 +66,16 @@ export default function Header() {
                   <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href={"/profilo"} className="w-100"><CircleUserRound /> Profilo</Link>
                   </DropdownMenuItem>
+                  {user.role.name === "SuperAdmin" && (
+                    <>
+                      <DropdownMenuItem asChild className="cursor-pointer">
+                        <Link href={"/carica-torneo"} className="w-100"><Upload /> Torneo</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="cursor-pointer">
+                        <Link href={"/carica-giocatori"} className="w-100"><Upload /> Giocatori</Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
                     <LogOut /> Esci

@@ -17,7 +17,7 @@ export const loginUser = async (body: { identifier: string, password: string }) 
 };
 
 export const getUserData = async (jwt: string) => {
-  const response = await axios.get(`${API_URL}/api/users/me?populate=favorites`, {
+  const response = await axios.get(`${API_URL}/api/users/me?populate=role&populate=favorites`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },

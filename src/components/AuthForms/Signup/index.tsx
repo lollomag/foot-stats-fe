@@ -73,7 +73,7 @@ export default function SignupForm() {
         Cookies.set('jwt', response.jwt, { expires: 7 });
         // setError(null);
         await refreshUser();
-        router.push('/statistiche-personali');
+        router.push('/giocatori');
       } catch (err) {
         // setError('Username o password errati');
         console.log(err);

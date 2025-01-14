@@ -17,7 +17,7 @@ export function PaymentStatusModal({ open, setOpen, status }: PaymentStatusModal
     return (
       <>
         <p>Pagamento andato a buon fine !</p>
-        <Link href={"/statistiche-personali"}>Vai alle tue statistiche</Link>
+        <Link href={"/giocatori"}>Vai alle lista giocatori</Link>
       </>
     )
   }

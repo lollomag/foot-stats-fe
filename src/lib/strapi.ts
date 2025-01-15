@@ -88,18 +88,9 @@ export const uploadPlayers = async (fullname: string) => {
 };
 
 export const getPlayers = async (jwt: string, page: number, searchQuery: string) => {
-  const searchFilter = searchQuery ? `&filters[fullname][$contains]=${searchQuery}` : "";
+  const searchFilter = searchQuery ? `&filters[fullname][$containsi]=${searchQuery}` : "";
 
   const response = await axios.get(`${API_URL}/api/players?pagination[page]=${page}&pagination[pageSize]=12${searchFilter}&populate=*`, {
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-    },
-  });
-  return response.data;
-};
-
-export const getSuggestedPlayers = async (jwt: string, surname: string) => {
-  const response = await axios.get(`${API_URL}/api/players?filters[fullname][$contains]=${surname}`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },

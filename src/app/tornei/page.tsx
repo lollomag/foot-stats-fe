@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import PlayerCard from "@/components/PlayerCard";
 import Cookies from "js-cookie";
 import Pagination from "@/components/Pagination";
-import { addToFavourites, getPlayers, getTournaments } from "@/lib/strapi";
+import { addToFavourites, getTournaments } from "@/lib/strapi";
 import { XIcon } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 
@@ -19,8 +19,8 @@ const TournamentsPage = () => {
   const jwt = Cookies.get("jwt");
 
   const fetchPlayers = useCallback(
-    async (searchQuery = "", pageNum = 1) => {
-      const data = await getTournaments(jwt || "", pageNum, searchQuery);
+    async (pageNum = 1) => {
+      const data = await getTournaments(jwt || "", pageNum);
       console.log(data);
       
       setPlayers(data);
@@ -30,8 +30,8 @@ const TournamentsPage = () => {
   );
 
   useEffect(() => {
-    fetchPlayers(search, page)
-  }, [search, page]);
+    fetchPlayers(page)
+  }, [page]);
 
   const toggleFavorite = async (playerId: number) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

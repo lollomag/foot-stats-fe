@@ -117,7 +117,7 @@ export const addToFavourites = async (jwt: string, playerId: number, userId: str
   return response.data;
 };
 
-export const getTournaments = async (jwt: string, page: number, searchQuery: string) => {
+export const getTournaments = async (jwt: string, page: number) => {
   // const searchFilter = searchQuery ? `&filters[fullname][$containsi]=${searchQuery}` : "";
 
   const response = await axios.get(`${API_URL}/api/tournaments?pagination[page]=${page}&pagination[pageSize]=12`, {

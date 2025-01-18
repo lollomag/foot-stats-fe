@@ -78,11 +78,15 @@ export const postChangeSubscriptionType = async (subscriptionId: string, newPric
 };
 
 //main features
-export const uploadPlayers = async (fullname: string) => {
+export const uploadPlayers = async (jwt: string, fullname: string) => {
   const response = await axios.post(`${API_URL}/api/players`, {
     data: {
       fullname
-    }
+    },
+  }, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
   });
   return response.data;
 };

@@ -8,14 +8,12 @@ export const isUserAuthenticated = async (): Promise<{
   user?: any;
 }> => {
   try {
-    // Ottieni il token JWT dai cookie
     const jwt = Cookies.get('jwt');
 
     if (!jwt) {
       return { isAuthenticated: false };
     }
 
-    // Verifica il token chiamando l'API per ottenere i dati dell'utente
     const user = await getUserData(jwt);
 
     return { isAuthenticated: true, user };
@@ -27,5 +25,5 @@ export const isUserAuthenticated = async (): Promise<{
 
 // Funzione per eseguire il logout
 export const logoutUser = () => {
-  Cookies.remove('jwt'); // Rimuovi il token JWT dai cookie
+  Cookies.remove('jwt');
 };

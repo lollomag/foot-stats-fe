@@ -1,93 +1,90 @@
-"use client"
-import { useState } from "react";
+"use client";
 
-export default function UploadPlayers() {
-  const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [responseMessage, setResponseMessage] = useState<string>("");
-  const [progress, setProgress] = useState<number>(0);
+import React, { useState } from "react";
+import axios from "axios";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { uploadPlayers } from "@/lib/strapi";
+import Cookies from "js-cookie";
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setFile(event.target.files[0]);
-    }
-  };
+export default function AddPlayersPage() {
+  const jwt = Cookies.get("jwt");
+  const [fullname, setFullname] = useState<string>("");
+  const [jsonFile, setJsonFile] = useState<File | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
-  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-  const handleUpload = async () => {
-    if (!file) {
-      alert("Seleziona un file JSON!");
+  // Funzione per aggiungere un singolo giocatore
+  const handleAddPlayer = async () => {
+    if (!fullname) {
+      setMessage("Il campo fullname è obbligatorio.");
       return;
     }
 
-    setLoading(true);
-    setResponseMessage("");
-    setProgress(0);
+    try {
+      const response = await uploadPlayers(jwt || "", fullname);
+      setMessage(`Giocatore ${response.data.fullname} aggiunto con successo!`);
+      setFullname(""); // Resetta il campo
+    } catch (error) {
+      console.error("Errore aggiungendo il giocatore:", error);
+      setMessage("Errore durante l'aggiunta del giocatore.");
+    }
+  };
 
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      try {
-        if (!event.target) return;
-        const jsonData = JSON.parse(event.target.result as string) as { data: string[] };
+  // Funzione per caricare un file JSON
+  const handleUploadJson = async () => {
+    if (!jsonFile) {
+      setMessage("Devi selezionare un file JSON.");
+      return;
+    }
 
-        const apiUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/players`;
+    const formData = new FormData();
+    formData.append("file", jsonFile);
 
-        const headers = {
-          "Content-Type": "application/json",
-        };
-
-        let successCount = 0;
-        let errorCount = 0;
-
-        // Invio con attesa tra richieste per evitare problemi
-        for (const [index, giocatore] of jsonData.data.entries()) {
-          try {
-            const response = await fetch(apiUrl, {
-              method: "POST",
-              headers,
-              body: JSON.stringify({ data: { fullname: giocatore } }),
-            });
-
-            if (response.ok) {
-              successCount++;
-            } else {
-              errorCount++;
-            }
-
-            // Aggiorna il progresso
-            setProgress(Math.round(((index + 1) / jsonData.data.length) * 100));
-
-            // Attendi 100ms tra le richieste per evitare problemi di sovraccarico
-            await delay(100);
-
-          } catch (error) {
-            console.error("Errore durante il caricamento di", giocatore, error);
-            errorCount++;
-          }
-        }
-
-        setResponseMessage(`Caricamento completato: ${successCount} successi, ${errorCount} errori.`);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        setResponseMessage("Errore durante il caricamento: " + error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    reader.readAsText(file);
+    try {
+      const response = await axios.post("/api/players/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setMessage(`File caricato con successo! ${response.data.count} giocatori aggiunti. ${response.data.skipped} saltati perchè doppioni`);
+      setJsonFile(null); // Resetta il campo file
+    } catch (error) {
+      console.error("Errore caricando il file JSON:", error);
+      setMessage("Errore durante il caricamento del file.");
+    }
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "20px" }}>
-      <h2>Carica Giocatori su Strapi</h2>
-      <input type="file" accept=".json" onChange={handleFileChange} />
-      <button onClick={handleUpload} disabled={loading}>
-        {loading ? `Caricamento... (${progress}%)` : "Carica Giocatori"}
-      </button>
-      <p>Progresso: {progress}%</p>
-      <pre>{responseMessage}</pre>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Aggiungi Giocatori</h1>
+
+      {/* Form per aggiungere un singolo giocatore */}
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Aggiungi un singolo giocatore</h2>
+        <div className="flex gap-4">
+          <Input
+            placeholder="Inserisci il nome completo del giocatore"
+            value={fullname}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFullname(e.target.value)}
+          />
+          <Button onClick={handleAddPlayer}>Aggiungi</Button>
+        </div>
+      </div>
+
+      {/* Form per caricare un file JSON */}
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Carica un file JSON</h2>
+        <div className="flex gap-4">
+          <Input
+            type="file"
+            accept=".json"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setJsonFile(e.target.files?.[0] || null)}
+            className="cursor-pointer"
+          />
+          <Button onClick={handleUploadJson}>Carica File</Button>
+        </div>
+      </div>
+
+      {/* Messaggi di stato */}
+      {message && <p className="mt-4 text-green-600">{message}</p>}
     </div>
   );
 }

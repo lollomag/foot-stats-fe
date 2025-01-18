@@ -48,7 +48,7 @@ const TournamentUpload = () => {
         results: JSON.parse(results),
       };
 
-      const response = await createTournament(jwt || "", tournamentData);
+      await createTournament(jwt || "", tournamentData);
       alert("Torneo caricato con successo!");
     } catch (error) {
       console.error("Errore caricando il torneo:", error);

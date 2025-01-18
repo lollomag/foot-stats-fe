@@ -21,6 +21,8 @@ const TournamentsPage = () => {
   const fetchPlayers = useCallback(
     async (pageNum = 1) => {
       const data = await getTournaments(jwt || "", pageNum);
+      console.log(data[0].results.length);
+      
       setPlayers(data);
       setTotalPages(data.meta.pagination.pageCount);
     },

@@ -127,3 +127,23 @@ export const getTournaments = async (jwt: string, page: number) => {
   });
   return response.data;
 };
+
+export const getLocations = async (jwt: string) => {
+  const response = await axios.get(`${API_URL}/api/locations`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+  return response.data;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const createTournament = async (jwt: string, data: any) => {
+  const response = await axios.post(`${API_URL}/api/tournaments/import`, data, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+      "Content-Type": "application/json",
+    },
+  });
+  return response.data;
+};

@@ -2,17 +2,15 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Input } from "@/components/ui/input";
-import PlayerCard from "@/components/PlayerCard";
 import Cookies from "js-cookie";
 import Pagination from "@/components/Pagination";
-import { addToFavourites, getTournaments } from "@/lib/strapi";
+import { getTournaments } from "@/lib/strapi";
 import { XIcon } from "lucide-react";
-import { useUser } from "@/context/UserContext";
+import { TournamentCard } from "@/components/TournamentCard";
 
 const TournamentsPage = () => {
-  const { user, refreshUser } = useUser();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [players, setPlayers] = useState<any[]>([]);
+  const [tournaments, setPlayers] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -21,10 +19,9 @@ const TournamentsPage = () => {
   const fetchPlayers = useCallback(
     async (pageNum = 1) => {
       const data = await getTournaments(jwt || "", pageNum);
-      console.log(data[0].results.length);
       
       setPlayers(data);
-      setTotalPages(data.meta.pagination.pageCount);
+      setTotalPages(data.meta?.pagination.pageCount || 1);
     },
     [jwt]
   );
@@ -33,27 +30,8 @@ const TournamentsPage = () => {
     fetchPlayers(page)
   }, [page]);
 
-  const toggleFavorite = async (playerId: number) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const favoriteIds = user.favorites.map((favorite: any) => favorite.id)
-
-    try {
-      await addToFavourites(jwt || "", playerId, user.id, favoriteIds)
-      await refreshUser()
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const isFavorite = (playerId: number) => {
-    if (!user) return
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const findFavorite = user.favorites.some((fav: any) => fav.id === playerId);
-    return findFavorite
-  }
-
   return (
-    <div className="container mx-auto p-6">
+    <>
       <h1 className="text-2xl font-bold mb-4">Lista Tornei</h1>
       <div className="relative w-full max-w-[500px] mb-4">
         <Input
@@ -77,15 +55,16 @@ const TournamentsPage = () => {
         )}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {players.length > 0 ? (
-          players.map((player) => (
-            <PlayerCard
-              key={player.id}
-              id={player.id}
-              name={player.location}
-              stats={[]}
-              isFavorite={isFavorite(player.id)}
-              onToggleFavorite={toggleFavorite}
+        {tournaments.length > 0 ? (
+          tournaments.map((tournament) => (
+            <TournamentCard
+              key={tournament.id}
+              id={tournament.id}
+              title={tournament.title}
+              location={tournament.location.name}
+              type={tournament.type}
+              par={tournament.par}
+              date={tournament.date}
             />
           ))
         ) : (
@@ -99,7 +78,7 @@ const TournamentsPage = () => {
           onPageChange={setPage}
         />
       </div>
-    </div>
+    </>
   );
 };
 

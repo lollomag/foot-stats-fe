@@ -24,10 +24,10 @@ export default function Header() {
   };
 
   const navigation = [
-    { name: "Preferiti", href: "preferiti" },
-    { name: "Giocatori", href: "giocatori" },
-    { name: "Tornei", href: "tornei" },
-    { name: "Confronta giocatori", href: "confronta-giocatori" }
+    { name: "Preferiti", href: "/preferiti" },
+    { name: "Giocatori", href: "/giocatori" },
+    { name: "Tornei", href: "/tornei" },
+    { name: "Confronta giocatori", href: "/confronta-giocatori" }
   ];
 
   return (

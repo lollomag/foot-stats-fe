@@ -8,7 +8,6 @@ export async function POST(req) {
   const jwt = (await cookies()).get('jwt')?.value;
 
   if (!file) {
-    console.log("arriva anche qui ??????");
     return NextResponse.json({ error: "Devi selezionare un file JSON." }, { status: 400 });
   }
 

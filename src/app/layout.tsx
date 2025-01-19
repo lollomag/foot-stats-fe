@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
 import { UserProvider } from "@/context/UserContext";
+import CustomBreadcrumb from "@/components/CustomBreadcrumb";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Header />
+          <CustomBreadcrumb />
           <main className="container max-w-screen-2xl mx-auto px-4 py-6 lg:px-8 min-h-[calc(100svh-150px)]">
             {children}
           </main>

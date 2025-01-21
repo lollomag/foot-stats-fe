@@ -44,7 +44,7 @@ const PlayerCard = ({ id, name, stats = [], isFavorite, onToggleFavorite }: Play
         </ul>
       </div>
       <div className="mt-auto flex justify-end space-x-2">
-        <Button variant="outline" onClick={() => router.push(`/players/${id}`)}>
+        <Button variant="outline" onClick={() => router.push(`/giocatori/${id}`)}>
           Dettagli
         </Button>
       </div>

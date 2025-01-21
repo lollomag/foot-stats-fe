@@ -8,15 +8,13 @@ const HeroHome = () => {
         {/* Left Section */}
         <div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            Your workspace <br /> anywhere.
+            Informazioni sul sito.
           </h1>
           <p className="text-lg text-gray-600 mb-6">
-            Set up your environment with everything you need and share it
-            effortlessly. Stay productive throughout your workflow, no matter
-            where you are.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur delectus officiis incidunt temporibus esse deserunt expedita aut nulla.
           </p>
           <Button className="flex items-center space-x-2">
-            <span>Come funziona test</span>
+            <span>Scopri</span>
           </Button>
         </div>
 

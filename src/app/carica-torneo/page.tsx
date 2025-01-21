@@ -88,7 +88,6 @@ const TournamentUpload = () => {
             <SelectItem value="Nazionale">Nazionale</SelectItem>
             <SelectItem value="Interregionale">Interregionale</SelectItem>
             <SelectItem value="Regionale">Regionale</SelectItem>
-            <SelectItem value="Altro">Altro</SelectItem>
           </SelectContent>
         </Select>
       </div>

@@ -102,6 +102,15 @@ export const getPlayers = async (jwt: string, page: number, searchQuery: string)
   return response.data;
 };
 
+export const getPlayerDetails = async (jwt: string, id: string) => {
+  const response = await axios.get(`${API_URL}/api/players/${id}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+  return response.data;
+};
+
 export const addToFavourites = async (jwt: string, playerId: number, userId: string | number, currentFavorites: number[]) => {
   const isFavorite = currentFavorites.includes(playerId);
 

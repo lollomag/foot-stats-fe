@@ -111,6 +111,16 @@ export const getPlayerDetails = async (jwt: string, id: string) => {
   return response.data;
 };
 
+export const getPlayerStatistics = async (jwt: string, id: string, year: string) => {
+  const isGeneral = year !== "Generale" ? `?year=${year}` : "";
+  const response = await axios.get(`${API_URL}/api/players/${id}/statistics${isGeneral}`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+  return response.data;
+};
+
 export const addToFavourites = async (jwt: string, playerId: number, userId: string | number, currentFavorites: number[]) => {
   const isFavorite = currentFavorites.includes(playerId);
 

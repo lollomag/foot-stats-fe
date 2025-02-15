@@ -54,7 +54,7 @@ const TournamentsPage = () => {
           </button>
         )}
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-[100px]">
         {tournaments.length > 0 ? (
           tournaments.map((tournament) => (
             <TournamentCard
@@ -71,7 +71,7 @@ const TournamentsPage = () => {
           <p className="text-gray-500">Nessun giocatore trovato.</p>
         )}
       </div>
-      <div className="w-full mt-6 flex justify-center fixed bottom-0 left-1/2 translate-x-[-50%] py-4 bg-white shadow-md">
+      <div className="w-full mt-6 flex justify-center fixed bottom-0 left-1/2 translate-x-[-50%] py-4 bg-white shadow-md border-t border-black">
         <Pagination
           currentPage={page}
           totalPages={totalPages}

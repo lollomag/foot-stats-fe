@@ -1,5 +1,5 @@
 import { getTournamentsDetails } from "../../../lib/strapi";
-import { MapPin } from "lucide-react";
+import { Calendar, MapPin } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import TournamentAverageScore from "@/components/TournamentAverageScore";
@@ -17,13 +17,17 @@ export default async function SingleTournament({ params }: SingleTournamentProps
 
   return (
     <div>
-      <h1 className="text-5xl font-semibold">{title} - {dayjs(date).locale("it").format("DD MMMM YYYY")}</h1>
+      <h1 className="text-2xl lg:text-5xl font-semibold">{title}</h1>
+      <div className="flex items-center gap-3 mt-6">
+        <Calendar />
+        <p className="text-lg font-semibold">{dayjs(date).locale("it").format("DD MMMM YYYY")}</p>
+      </div>
       <div className="flex items-center gap-3 mt-6">
         <MapPin />
         <Link
           href={location.link}
           target="_blank"
-          className="underline hover:no-underline"
+          className="underline hover:no-underline text-lg font-semibold"
         >
           {location.name}
         </Link>

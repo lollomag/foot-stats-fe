@@ -16,7 +16,7 @@ export default function Breadcrumb() {
   const segments = pathname.split('/').filter((segment) => segment);
 
   return (
-    <nav className="container max-w-screen-2xl mx-auto px-8 py-4 flex items-center space-x-2 text-gray-600 text-sm">
+    <nav className="container max-w-screen-2xl mx-auto px-4 lg:px-8 py-4 flex items-center space-x-2 text-gray-600 text-sm">
       <div>
         <Link href="/" className="text-blue-500 hover:underline">
           Home

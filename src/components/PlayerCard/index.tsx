@@ -2,6 +2,7 @@
 import { StarIcon } from "lucide-react"; // Icona per i preferiti
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/context/UserContext";
 
 interface PlayerProps {
   id: number;
@@ -13,21 +14,24 @@ interface PlayerProps {
 
 const PlayerCard = ({ id, name, stats = [], isFavorite, onToggleFavorite }: PlayerProps) => {
   const router = useRouter();
+  const { isAuthenticated } = useUser();
 
   const handleFavorite = () => {
     if (onToggleFavorite) {
       onToggleFavorite(id);
     }
   };
-  
+
 
   return (
     <div className="border rounded-lg p-4 shadow-sm bg-white flex flex-col">
       <div className="flex justify-between items-start">
         <h2 className="text-lg font-semibold">{name}</h2>
-        <button onClick={handleFavorite} className="text-green-800">
-          <StarIcon className={isFavorite ? "fill-green-800" : "stroke-green-800"} />
-        </button>
+        {isAuthenticated && (
+          <button onClick={handleFavorite} className="text-green-800">
+            <StarIcon className={isFavorite ? "fill-green-800" : "stroke-green-800"} />
+          </button>
+        )}
       </div>
       <div className="mt-2 mb-6">
         <h3 className="text-sm font-medium text-gray-600">Statistiche</h3>

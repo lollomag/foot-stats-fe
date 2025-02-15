@@ -1,30 +1,22 @@
 import { getPlayerDetails, getPlayerStatistics } from "../../../lib/strapi";
 import { cookies } from "next/headers";
 import 'dayjs/locale/it';
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import PlayerStatsFilter from "@/components/PlayerStatsFilter";
 
-interface PlayerDetailsProps {
-  params: Promise<{ id: string }>;
-  searchParams: { year?: string };
-}
 
-export default async function PlayerDetails({ params, searchParams }: PlayerDetailsProps) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default async function PlayerDetails({ params, searchParams }: any) {
   const { id } = await params;
-  
 
   const jwt = (await cookies())?.get("jwt")?.value;
   const selectedYear = searchParams.year || "all";
   const data = await getPlayerDetails(jwt || "", id);
   const statistics = await getPlayerStatistics(jwt || "", id, selectedYear);
-  console.log("daje roma dajeee", statistics);
-
-  
 
   return (
     <div>
-      <h1 className="text-5xl font-semibold">{data.fullname}</h1>
-      <PlayerStatsFilter id={id}/>
+      <h1 className="text-3xl lg:text-5xl font-semibold">{data.fullname}</h1>
+      <PlayerStatsFilter />
       {!!statistics.message &&
         <p className="text-xl font-semibold mt-6">{statistics.message}</p>
       }
@@ -36,7 +28,7 @@ export default async function PlayerDetails({ params, searchParams }: PlayerDeta
           <StatCard title="Media colpi nei par 3" value={statistics.averagePar3} />
           <StatCard title="Media colpi nei par 4" value={statistics.averagePar4} />
           <StatCard title="Media colpi nei par 5" value={statistics.averagePar5} />
-          <StatCard title="Posizione media" value={statistics.averagePosition} />
+          <StatCard title="Posizione media" value={statistics.averagePosition.toFixed(2)} />
           <StatCard title="Conteggio hole in 1" value={statistics.holeInOneCount} />
         </div>
       )}

@@ -112,7 +112,7 @@ export const getPlayerDetails = async (jwt: string, id: string) => {
 };
 
 export const getPlayerStatistics = async (jwt: string, id: string, year: string) => {
-  const isGeneral = year !== "Generale" ? `?year=${year}` : "";
+  const isGeneral = year !== "all" ? `?year=${year}` : "";
   const response = await axios.get(`${API_URL}/api/players/${id}/statistics${isGeneral}`, {
     headers: {
       Authorization: `Bearer ${jwt}`,

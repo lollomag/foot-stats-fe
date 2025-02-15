@@ -1,20 +1,17 @@
 "use client"
 
 import ChangePasswordForm from "@/components/AuthForms/ChangePassword";
-import PaymentsInfo from "@/components/PaymentsInfo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@/context/UserContext";
-import { getStripeData } from "@/lib/strapi";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Profile() {
   const { user } = useUser();
   const [profileImage, setProfileImage] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [data, setData] = useState<any>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -23,22 +20,6 @@ export default function Profile() {
       setProfileImage(imageUrl);
     }
   };
-
-  const fetchData = async () => {
-    if (user.lifetimeAccess) return
-    try {
-      const result = await getStripeData(user.stripeCustomerId);
-      setData(result);
-    } catch (error) {
-      console.error('Errore durante il recupero dei dati:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (!!user) {
-      fetchData()
-    }
-  }, [user]);
   
 
   return (
@@ -48,9 +29,6 @@ export default function Profile() {
         <TabsList className="flex flex-col w-1/5 border-r h-full py-5">
           <TabsTrigger value="user-data" className="text-left w-full justify-start">
             Dati Utente
-          </TabsTrigger>
-          <TabsTrigger value="subscription" className="text-left w-full justify-start">
-            Abbonamento
           </TabsTrigger>
           <TabsTrigger value="change-password" className="text-left w-full justify-start">
             Cambia Password
@@ -106,10 +84,6 @@ export default function Profile() {
                 </Button>
               </div>
             </form>
-          </TabsContent>
-
-          <TabsContent value="subscription">
-            <PaymentsInfo paymentData={data} />
           </TabsContent>
 
           <TabsContent value="change-password">

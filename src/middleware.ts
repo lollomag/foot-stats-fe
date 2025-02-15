@@ -15,16 +15,6 @@ export async function middleware(req: NextRequest) {
 	try {
 		const user = await getUserData(jwt);
 
-		if (!user) {
-			// Token non valido, reindirizza alla pagina di login
-			url.pathname = '/';
-			return NextResponse.redirect(url);
-		}
-
-		if (!user.subscriptionActive && !user.lifetimeAccess) {
-			url.pathname = '/iscriviti';
-			return NextResponse.redirect(url);
-		}
 
 		if (req.nextUrl.pathname.startsWith("/carica-torneo") && user.role.name !== "SuperAdmin") {
 			return NextResponse.redirect(new URL("/non-autorizzato", req.url));
@@ -46,8 +36,6 @@ export async function middleware(req: NextRequest) {
 // Configura le route su cui applicare il middleware
 export const config = {
 	matcher: [
-		'/giocatori/:path*',
-		'/confronta-giocatori/:path*',
 		'/preferiti/:path*',
 		'/profilo/:path*',
 		'/carica-torneo',

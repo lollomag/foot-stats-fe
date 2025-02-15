@@ -2,12 +2,13 @@
 import { Menu, LogOut, CircleUserRound, Upload } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "../ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuItem } from "../ui/dropdown-menu";
 import { logoutUser } from "@/lib/auth";
 import { useUser } from "@/context/UserContext";
+import { Button } from "../ui/button";
 
 export default function Header() {
   const { user, isAuthenticated, refreshUser } = useUser();
@@ -24,7 +25,6 @@ export default function Header() {
   };
 
   const navigation = [
-    { name: "Preferiti", href: "/preferiti" },
     { name: "Giocatori", href: "/giocatori" },
     { name: "Tornei", href: "/tornei" },
     { name: "Confronta giocatori", href: "/confronta-giocatori" }
@@ -32,30 +32,34 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 bg-green-800 text-white">
+      <header className="sticky top-0 bg-green-800 text-white z-50">
         <nav className="max-w-screen-2xl mx-auto px-4 py-4 lg:px-8 border-b-2 border-black flex items-center justify-between">
           <Link href={"/"}>
             <span className="sr-only">FootStats</span>
             <p className="text-3xl font-extrabold">FootStats</p>
           </Link>
 
-          {isAuthenticated && (
-            <button onClick={() => setIsOpen(!isOpen)} className="flex md:hidden">
-              <Menu className="w-6 h-6" />
-            </button>
-          )}
+          <button onClick={() => setIsOpen(!isOpen)} className="flex md:hidden">
+            <Menu className="w-6 h-6" />
+          </button>
 
-          {isAuthenticated && (
-            <div className="hidden md:flex md:gap-x-12 items-center">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-md font-semibold transition-all hover:underline"
-                >
-                  {item.name}
-                </Link>
-              ))}
+          <div className="hidden md:flex md:gap-x-12 items-center">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="text-md font-semibold transition-all hover:underline"
+              >
+                {item.name}
+              </Link>
+            ))}
+            {isAuthenticated && (
+              <Link href={"/preferiti"} className="text-md font-semibold transition-all hover:underline">Preferiti</Link>
+            )}
+            {!isAuthenticated && !isLoginPage && (
+              <Link href={"/accedi"} className="text-md font-semibold transition-all hover:underline">Accedi</Link>
+            )}
+            {isAuthenticated && (
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <Avatar>
@@ -83,27 +87,43 @@ export default function Header() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </div>
-          )}
-
-          {!isAuthenticated && !isLoginPage && (
-            <Link href={"/accedi"}>Accedi</Link>
-          )}
+            )}
+          </div>
         </nav>
 
         {/* mobile menu */}
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetContent side={"left"} className="w-80">
-            <SheetHeader>
-              <Link href="/">
+            <SheetHeader className="text-left h-full">
+              <Link href="/" className="mb-10">
                 <span className="sr-only">FootStats</span>
                 <p className="text-3xl font-extrabold">FootStats</p>
               </Link>
-              <SheetTitle>Are you absolutely sure?</SheetTitle>
-              <SheetDescription>
-                This action cannot be undone. This will permanently delete your account
-                and remove your data from our servers.
-              </SheetDescription>
+              <SheetTitle className="sr-only">Menù di navigazione laterale</SheetTitle>
+              <div className="flex flex-col gap-3">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="text-md font-semibold transition-all hover:underline"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+                {isAuthenticated && (
+                  <>
+                    <Link href={"/preferiti"} className="text-md font-semibold transition-all hover:underline">Preferiti</Link>
+                    <Link href={"/profilo"} className="text-md font-semibold transition-all hover:underline">Profilo</Link>
+                  </>
+                )}
+              </div>
+              {!isAuthenticated && !isLoginPage ? (
+                <Link href={"/accedi"} className="!mt-auto text-md font-semibold transition-all hover:underline">Accedi</Link>
+              ) : (
+                <Button onClick={() => handleLogout()} className="!mt-auto"><LogOut /> Esci</Button>
+              )}
+
             </SheetHeader>
           </SheetContent>
         </Sheet>

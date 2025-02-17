@@ -5,6 +5,8 @@ import Link from "next/link";
 import TournamentAverageScore from "@/components/TournamentAverageScore";
 import dayjs from "dayjs";
 import 'dayjs/locale/it';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import TournamentLeaderboard from "@/components/TournamentLeaderboard";
 
 interface SingleTournamentProps {
   params: Promise<{ id: string }>;
@@ -13,7 +15,7 @@ interface SingleTournamentProps {
 export default async function SingleTournament({ params }: SingleTournamentProps) {
   const { id } = await params;
   const jwt = (await cookies())?.get("jwt")?.value;
-  const { title, date, location, statistics } = await getTournamentsDetails(jwt || "", id);
+  const { title, date, location, statistics, results, par } = await getTournamentsDetails(jwt || "", id);
 
   return (
     <div>
@@ -32,7 +34,27 @@ export default async function SingleTournament({ params }: SingleTournamentProps
           {location.name}
         </Link>
       </div>
-      <TournamentAverageScore statistics={statistics}/>
+      <Tabs defaultValue="holes">
+        <TabsList className="my-7">
+          <TabsTrigger value="holes" className="text-left justify-start">
+            Statistiche buche
+          </TabsTrigger>
+          <TabsTrigger value="leaderboard" className="text-left justify-start">
+            Classifica
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="holes">
+          <h2 className="sr-only">Dati Utente</h2>
+          <TournamentAverageScore statistics={statistics} />
+        </TabsContent>
+
+        <TabsContent value="leaderboard">
+          <h2 className="sr-only">Classifica</h2>
+          <TournamentLeaderboard results={results} par={par}/>
+        </TabsContent>
+      </Tabs>
+
     </div>
   );
 }

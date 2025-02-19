@@ -26,6 +26,10 @@ export default function Breadcrumb() {
         const isLast = index === segments.length - 1;
         const href = `/${segments.slice(0, index + 1).join('/')}`;
         const label = customLabels[segment] || segment.replace(/-/g, ' ').toUpperCase();
+        
+        if (label === "GIOCATORE") {
+          return
+        }
 
         return (
           <div key={index} className="flex items-center space-x-2">

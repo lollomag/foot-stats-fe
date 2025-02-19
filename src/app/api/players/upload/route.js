@@ -13,7 +13,7 @@ export async function POST(req) {
 
   try {
     const content = await file.text();
-    const {data: players} = JSON.parse(content);
+    const players = JSON.parse(content);
 
     if (!Array.isArray(players)) {
       return NextResponse.json({ error: "Il file deve contenere un array di giocatori." }, { status: 400 });
@@ -23,7 +23,7 @@ export async function POST(req) {
     let skipped = 0; 
     for (const player of players) {
       const existingPlayers = await axios.get(
-        `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/players?filters[fullname][$eq]=${encodeURIComponent(player)}`,
+        `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/players?filters[aifg_code][$eq]=${encodeURIComponent(player.aifg_code)}`,
         {
           headers: { Authorization: `Bearer ${jwt}` },
         }
@@ -35,12 +35,23 @@ export async function POST(req) {
       }
 
       if (player) {
-        await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/players`, {
-          data: { fullname: player },
-        }, {
-          headers: { "Authorization": `Bearer ${jwt}` },
-        });
-        count++;
+        try {
+          await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/players`, {
+            data: {
+              fullname: player.fullname,
+              aifg_code: player.aifg_code,
+              team: player.team,
+              interregionale: player.interregionale,
+              regionale: player.regionale,
+              category: player.category
+            },
+          }, {
+            headers: { "Authorization": `Bearer ${jwt}` },
+          });
+          count++;
+        } catch (postError) {
+          console.error("Errore durante l'invio del giocatore:", postError);
+        }
       }
     }
 

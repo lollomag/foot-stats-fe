@@ -1,10 +1,14 @@
+"use client"
+
 import { cn } from "@/lib/utils";
 import { Accordion, AccordionItem } from "../ui/accordion";
 import { AccordionContent, AccordionTrigger } from "@radix-ui/react-accordion";
 import { ChevronDown } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function TournamentLeaderboard({ results, par }: any) {
+export default function TournamentLeaderboard({ results, par, players }: any) {
+  const pathname = usePathname();
   const getScoreColor = (hit: number, par: number) => {
     const diff = hit - par;
     if (diff <= -2) return "bg-blue-500"; // Eagle o migliore
@@ -14,18 +18,25 @@ export default function TournamentLeaderboard({ results, par }: any) {
     if (diff === 2) return "bg-red-500"; // Double Bogey
     return "bg-red-700"; // Oltre Double Bogey
   };
+  const router = useRouter();
 
+  const navigateToPlayer = (player: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const playerData = players.find((p: any) => p.fullname === player);
+    router.push(`${pathname}/giocatore/${playerData.id}`);
+  }
+  
   return (
     <Accordion type="single" collapsible className="w-full flex flex-col gap-4">
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {results.map((player: any, index: number) => (
         <AccordionItem key={index} value={player.player} className="border border-black shadow-lg rounded-sm">
-          <AccordionTrigger className="flex items-center p-4 w-full gap-5">
+          <div className="flex items-center p-4 w-full gap-5">
             <span className="text-xl font-semibold">{index + 1}</span>
-            <span className="text-lg font-medium">{player.player}</span>
+            <button onClick={() => navigateToPlayer(player.player)} className="text-lg font-medium">{player.player}</button>
             <span className="text-xl font-bold ml-auto">{player.total - par}</span>
-            <span><ChevronDown /></span>
-          </AccordionTrigger>
+            <AccordionTrigger><ChevronDown /></AccordionTrigger>
+          </div>
 
           <AccordionContent className="overflow-x-auto transition-all duration-300 ease-in-out">
             <div className="min-w-[600px] flex p-4 bg-gray-100 rounded-b">

@@ -9,13 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TournamentLeaderboard from "@/components/TournamentLeaderboard";
 
 interface SingleTournamentProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ tournamentId: string }>;
 }
 
 export default async function SingleTournament({ params }: SingleTournamentProps) {
-  const { id } = await params;
+  const { tournamentId } = await params;
   const jwt = (await cookies())?.get("jwt")?.value;
-  const { title, date, location, statistics, results, par } = await getTournamentsDetails(jwt || "", id);
+  const { title, date, location, statistics, results, par, players } = await getTournamentsDetails(jwt || "", tournamentId);
 
   return (
     <div>
@@ -51,7 +51,7 @@ export default async function SingleTournament({ params }: SingleTournamentProps
 
         <TabsContent value="leaderboard">
           <h2 className="sr-only">Classifica</h2>
-          <TournamentLeaderboard results={results} par={par}/>
+          <TournamentLeaderboard results={results} par={par} players={players}/>
         </TabsContent>
       </Tabs>
 

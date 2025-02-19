@@ -51,7 +51,7 @@ const PlayersPage = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <>
       <h1 className="text-2xl font-bold mb-4">Lista Giocatori</h1>
       <div className="relative w-full max-w-[500px] mb-4">
         <Input
@@ -97,7 +97,7 @@ const PlayersPage = () => {
           onPageChange={setPage}
         />
       </div>
-    </div>
+    </>
   );
 };
 

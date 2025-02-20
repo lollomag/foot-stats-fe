@@ -18,43 +18,38 @@ export async function POST(req) {
     if (!Array.isArray(players)) {
       return NextResponse.json({ error: "Il file deve contenere un array di giocatori." }, { status: 400 });
     }
-
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms)); // Funzione di ritardo
 
     let count = 0;
-    let skipped = 0;
+    let skipped = 0; 
 
     for (const player of players) {
       try {
         // Controlla se il giocatore esiste già
-        const existingPlayerRes = await fetch(
+        const existingPlayers = await axios.get(
           `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/players?filters[aifg_code][$eq]=${encodeURIComponent(player.aifg_code)}`,
-          { headers: { Authorization: `Bearer ${jwt}` } }
+          {
+            headers: { Authorization: `Bearer ${jwt}` },
+          }
         );
 
-        const existingPlayers = await existingPlayerRes.json();
-        if (existingPlayers.data.length > 0) {
+        if (existingPlayers.data.data.length > 0) {
           skipped++;
           continue; // Salta il giocatore se esiste già
         }
 
         // Aggiungi il giocatore se non esiste
-        await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/players`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
+        await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/players`, {
+          data: {
+            fullname: player.fullname,
+            aifg_code: player.aifg_code,
+            team: player.team,
+            interregionale: player.interregionale,
+            regionale: player.regionale,
+            category: player.category
           },
-          body: JSON.stringify({
-            data: {
-              fullname: player.fullname,
-              aifg_code: player.aifg_code,
-              team: player.team,
-              interregionale: player.interregionale,
-              regionale: player.regionale,
-              category: player.category,
-            },
-          }),
+        }, {
+          headers: { "Authorization": `Bearer ${jwt}` },
         });
 
         count++;
@@ -66,8 +61,6 @@ export async function POST(req) {
         console.error(`❌ Errore con il giocatore ${player.fullname}:`, error);
       }
     }
-
-    console.log(`✅ Caricamento completato! ${count} giocatori aggiunti, ${skipped} già esistenti.`);
 
     return NextResponse.json({ count, skipped });
   } catch (error) {

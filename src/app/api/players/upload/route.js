@@ -24,9 +24,9 @@ export async function POST(req) {
     let count = 0;
     let skipped = 0;
     
-    for (let i = 0; i < players.length; i += 50) {
-      const batch = players.slice(i, i + 50);
-      console.log(`🔹 Caricamento batch ${i / 50 + 1} (${batch.length} giocatori)`);
+    for (let i = 0; i < players.length; i += 20) {
+      const batch = players.slice(i, i + 20);
+      console.log(`🔹 Caricamento batch ${i / 20 + 1} (${batch.length} giocatori)`);
 
       for (const player of batch) {
         try {
@@ -56,7 +56,7 @@ export async function POST(req) {
           count++;
           console.log(`✔️ Aggiunto: ${player.fullname} (${count}/${players.length})`);
 
-          await delay(500); // **Aspetta 500ms prima di passare al prossimo giocatore**
+          await delay(2000); // **Aspetta 2000ms prima di passare al prossimo giocatore**
         } catch (error) {
           console.error(`❌ Errore con il giocatore ${player.fullname}:`, error);
         }

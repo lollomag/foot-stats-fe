@@ -19,10 +19,9 @@ export async function POST(req) {
       return NextResponse.json({ error: "Il file deve contenere un array di giocatori." }, { status: 400 });
     }
 
+    let count = 0;
+
     const processBatch = async (batch) => {
-      let count = 0;
-      let skipped = 0;
-      
       for (const player of batch) {
         try {
           const existingPlayerRes = await axios.get(
@@ -31,7 +30,6 @@ export async function POST(req) {
           );
 
           if (existingPlayerRes.data.data.length > 0) {
-            skipped++;
             continue;
           }
 

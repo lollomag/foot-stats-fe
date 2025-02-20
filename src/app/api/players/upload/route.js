@@ -28,13 +28,20 @@ export async function POST(req) {
           headers: { Authorization: `Bearer ${jwt}` },
         }
       );
+      console.log("existingPlayers", existingPlayers);
+      
 
       if (existingPlayers.data.data.length > 0) {
         skipped++;
         continue; // Salta se il giocatore esiste già
       }
 
+      console.log("passa");
+
+
       if (player) {
+        console.log("player", player);
+
         try {
           await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/players`, {
             data: {

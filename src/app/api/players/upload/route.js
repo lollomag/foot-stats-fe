@@ -19,18 +19,12 @@ export async function POST(req) {
       return NextResponse.json({ error: "Il file deve contenere un array di giocatori." }, { status: 400 });
     }
 
-    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms)); // Funzione di ritardo
-
     let count = 0;
     let skipped = 0;
-    
-    for (let i = 0; i < players.length; i += 20) {
-      const batch = players.slice(i, i + 20);
-      console.log(`🔹 Caricamento batch ${i / 20 + 1} (${batch.length} giocatori)`);
 
+    const processBatch = async (batch) => {
       for (const player of batch) {
         try {
-          // Controlla se il giocatore esiste già
           const existingPlayerRes = await axios.get(
             `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/players?filters[aifg_code][$eq]=${encodeURIComponent(player.aifg_code)}`,
             { headers: { Authorization: `Bearer ${jwt}` } }
@@ -38,10 +32,9 @@ export async function POST(req) {
 
           if (existingPlayerRes.data.data.length > 0) {
             skipped++;
-            continue; // Salta il giocatore se esiste già
+            continue;
           }
 
-          // Aggiungi il giocatore
           await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/players`, {
             data: {
               fullname: player.fullname,
@@ -55,23 +48,26 @@ export async function POST(req) {
 
           count++;
           console.log(`✔️ Aggiunto: ${player.fullname} (${count}/${players.length})`);
-
-          await delay(2000); // **Aspetta 2000ms prima di passare al prossimo giocatore**
         } catch (error) {
           console.error(`❌ Errore con il giocatore ${player.fullname}:`, error);
         }
       }
+    };
 
-      console.log(`🕐 Attendo 5 secondi prima di iniziare il prossimo batch...`);
-      await delay(5000); // **Aspetta 5 secondi tra un batch e l'altro**
+    // Dividiamo i giocatori in batch da 30 e li elaboriamo in modo asincrono
+    const batchSize = 30;
+    for (let i = 0; i < players.length; i += batchSize) {
+      const batch = players.slice(i, i + batchSize);
+      setTimeout(() => processBatch(batch), i * 5000); // **Ogni batch inizia con un delay progressivo**
     }
 
-    console.log(`✅ Caricamento completato! ${count} giocatori aggiunti, ${skipped} già esistenti.`);
-    return NextResponse.json({ count, skipped });
+    console.log(`🚀 Avviato il caricamento batch!`);
+    return NextResponse.json({ message: "Caricamento avviato in background!" });
 
   } catch (error) {
     console.error("❌ Errore caricando il file JSON:", error);
     return NextResponse.json({ error: "Errore durante il caricamento del file." }, { status: 500 });
   }
 }
+
 

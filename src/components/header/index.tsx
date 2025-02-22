@@ -27,7 +27,7 @@ export default function Header() {
   const navigation = [
     { name: "Giocatori", href: "/giocatori" },
     { name: "Tornei", href: "/tornei" },
-    { name: "Confronta giocatori", href: "/confronta-giocatori" }
+    { name: "Ranking", href: "/ranking" }
   ];
 
   return (
@@ -78,6 +78,9 @@ export default function Header() {
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild className="cursor-pointer">
                         <Link href={"/carica-giocatori"} className="w-100"><Upload /> Giocatori</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="cursor-pointer">
+                        <Link href={"/carica-ranking"} className="w-100"><Upload /> Ranking</Link>
                       </DropdownMenuItem>
                     </>
                   )}

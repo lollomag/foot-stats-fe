@@ -24,6 +24,10 @@ export async function middleware(req: NextRequest) {
 			return NextResponse.redirect(new URL("/non-autorizzato", req.url));
 		}
 
+		if (req.nextUrl.pathname.startsWith("/carica-ranking") && user.role.name !== "SuperAdmin") {
+			return NextResponse.redirect(new URL("/non-autorizzato", req.url));
+		}
+
 		// L'utente è autenticato e ha un abbonamento attivo: lascia passare
 		return NextResponse.next();
 	} catch (err) {
@@ -39,6 +43,7 @@ export const config = {
 		'/preferiti/:path*',
 		'/profilo/:path*',
 		'/carica-torneo',
-		'/carica-giocatori'
+		'/carica-giocatori',
+		'/carica-ranking'
 	], // Route protette
 };

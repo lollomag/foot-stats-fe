@@ -174,8 +174,13 @@ export const createTournament = async (jwt: string, data: any) => {
   const response = await axios.post(`${API_URL}/api/tournaments/import`, data, {
     headers: {
       Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json",
+      "Content-Type": "multipart/form-data",
     },
   });
+  return response.data;
+};
+
+export const getRanking = async () => {
+  const response = await axios.get(`${API_URL}/api/ranking/latest`);
   return response.data;
 };

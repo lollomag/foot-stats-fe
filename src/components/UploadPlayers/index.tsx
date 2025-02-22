@@ -20,10 +20,10 @@ export default function AddPlayersPage() {
     formData.append("file", jsonFile);
 
     try {
-      const response = await axios.post("/api/players/upload", formData, {
+      await axios.post("/api/players/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setMessage(`File caricato con successo! ${response.data.count} giocatori aggiunti. ${response.data.skipped} saltati perchè doppioni`);
+      setMessage(`File caricato con successo! giocatori aggiunti.`);
       setJsonFile(null); // Resetta il campo file
     } catch (error) {
       console.error("Errore caricando il file JSON:", error);

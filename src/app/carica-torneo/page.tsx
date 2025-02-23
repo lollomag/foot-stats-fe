@@ -45,7 +45,7 @@ const TournamentUpload = () => {
         type,
         date,
         par,
-        results: JSON.parse(results),
+        results: JSON.stringify(JSON.parse(results)),
       };
 
       await createTournament(jwt || "", tournamentData);

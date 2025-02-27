@@ -73,7 +73,7 @@ export default function RankingPage() {
           </thead>
           <tbody>
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {ranking.map((player: any, index: number) => (
+            {ranking.map((player: any) => (
               <tr key={player.name} className="border-t">
                 <td className="p-2">{player.rankingPosition}</td>
                 <td className="p-2">{player.name}</td>

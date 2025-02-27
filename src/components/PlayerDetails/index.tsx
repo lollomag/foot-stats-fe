@@ -12,6 +12,7 @@ export default async function PlayerDetails({ playerId, selectedYear }: any) {
   return (
     <div>
       <h1 className="text-3xl lg:text-5xl font-semibold">{data.fullname}</h1>
+      <p className="text-xl my-10">Ranking: <span className="text-3xl font-bold">{data.ranking_position}°</span> ({data.ranking_points})</p>  
       <PlayerStatsFilter />
       {!!statistics.message &&
         <p className="text-xl font-semibold mt-6">{statistics.message}</p>
@@ -25,7 +26,7 @@ export default async function PlayerDetails({ playerId, selectedYear }: any) {
           <StatCard title="Media colpi nei par 4" value={statistics.averagePar4} />
           <StatCard title="Media colpi nei par 5" value={statistics.averagePar5} />
           <StatCard title="Posizione media" value={statistics.averagePosition.toFixed(2)} />
-          <StatCard title="Conteggio hole in 1" value={statistics.holeInOneCount} />
+          <StatCard title="Conteggio Hole in 1" value={statistics.holeInOneCount} />
         </div>
       )}
     </div>

@@ -66,6 +66,7 @@ export default function RankingPage() {
             <tr className="bg-gray-100">
               <th className="p-2 text-left">Posizione</th>
               <th className="p-2 text-left">Nome</th>
+              <th className="p-2 text-left">Gare giocate</th>
               <th className="p-2 text-left">Punti Totali</th>
               {/* <th className="p-2 text-left">Andamento Settimanale</th> */}
             </tr>
@@ -74,8 +75,9 @@ export default function RankingPage() {
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {ranking.map((player: any, index: number) => (
               <tr key={player.name} className="border-t">
-                <td className="p-2">{index + 1}</td>
+                <td className="p-2">{player.rankingPosition}</td>
                 <td className="p-2">{player.name}</td>
+                <td className="p-2">{player.gamesPlayed}</td>
                 <td className="p-2">{player.totalPoints}</td>
                 {/* <td className="p-2">
                   <small className="text-gray-500">
